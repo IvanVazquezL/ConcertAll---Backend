@@ -1,8 +1,16 @@
+using ConcertAll.Persistence;
 using ConcertAll.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Register or configure my context
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+});
 
 // Registering my services
 builder.Services.AddSingleton<GenreRepository>();
