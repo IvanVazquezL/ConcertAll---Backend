@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 });
 
 // Registering my services
-builder.Services.AddSingleton<GenreRepository>();
+builder.Services.AddTransient<IGenreRepository,GenreRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -25,7 +25,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwagger(); 
     app.UseSwaggerUI();
 }
 

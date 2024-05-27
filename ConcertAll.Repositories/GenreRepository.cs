@@ -1,55 +1,56 @@
 ﻿using ConcertAll.Entities;
+using ConcertAll.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConcertAll.Repositories
 {
-    public class GenreRepository
+    public class GenreRepository : IGenreRepository
     {
-        private readonly List<Genre> genreList;
-        public GenreRepository()
+        private readonly ApplicationDBContext context;
+
+        public GenreRepository(ApplicationDBContext context)
         {
-            genreList = new();
-            genreList.Add(new Genre() { Id = 1, Name = "Pop"});
-            genreList.Add(new Genre() { Id = 2, Name = "K-Pop" });
-            genreList.Add(new Genre() { Id = 3, Name = "Rock" });
+            this.context = context;
         }
 
-        public List<Genre> Get() 
-        { 
-            return genreList;
-        }
-        public Genre? Get(int id)
+        public async Task<List<Genre>> GetAsync()
         {
-            return genreList.FirstOrDefault(genre => genre.Id == id);
+            return await context.Genres.ToListAsync();
         }
-
-        public void Add(Genre genre) 
+        public async Task<Genre?> GetAsync(int id)
         {
-            var lastItem = genreList.MaxBy(genre => genre.Id);
-            var newGenre = new Genre() { 
-                Id = lastItem is null ? 1 : lastItem.Id + 1, 
-                Name = genre.Name
-            };
-            genreList.Add(newGenre);
+            return await context.Genres.FirstOrDefaultAsync(genre => genre.Id == id);
         }
 
-        public void Update(int id, Genre genre)
+        public async Task<int> AddAsync(Genre genre)
         {
-            var item = Get(id);
+            context.Genres.Add(genre);
+            await context.SaveChangesAsync();
+            return genre.Id;
+        }
+
+        public async Task UpdateAsync(int id, Genre genre)
+        {
+            var item = await GetAsync(id);
 
             if (item is not null)
             {
                 item.Name = genre.Name;
                 item.Status = genre.Status;
+
+                context.Update(item);
+                await context.SaveChangesAsync();
             }
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var item = Get(id);
+            var item = await GetAsync(id);
 
             if (item is not null)
             {
-                genreList.Remove(item);
+                context.Genres.Remove(item);
+                await context.SaveChangesAsync();
             }
         }
 

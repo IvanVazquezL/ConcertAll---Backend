@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConcertAll.Entities\ConcertAll.Entities.csproj" />
+    <ProjectReference Include="..\ConcertAll.Persistence\ConcertAll.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
