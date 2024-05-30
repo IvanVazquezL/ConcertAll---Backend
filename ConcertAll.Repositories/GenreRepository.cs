@@ -15,18 +15,27 @@ namespace ConcertAll.Repositories
 
         public async Task<List<Genre>> GetAsync()
         {
-            return await context.Genres.ToListAsync();
+            return await context.Genres
+                .AsNoTracking()
+                .ToListAsync();
         }
         public async Task<Genre?> GetAsync(int id)
         {
-            return await context.Genres.FirstOrDefaultAsync(genre => genre.Id == id);
+            var item = await context.Genres
+              //.FindAsync(id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(genre => genre.Id == id);
+
+            if (item is not null)
+                return item;
+            else
+                throw new InvalidOperationException($"Couldn't find a record with id {id}");
         }
 
-        public async Task<int> AddAsync(Genre genre)
+        public async Task AddAsync(Genre genre)
         {
             context.Genres.Add(genre);
             await context.SaveChangesAsync();
-            return genre.Id;
         }
 
         public async Task UpdateAsync(int id, Genre genre)
@@ -40,6 +49,10 @@ namespace ConcertAll.Repositories
 
                 context.Update(item);
                 await context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException($"Couldn't find a record with id {id}");
             }
         }
 

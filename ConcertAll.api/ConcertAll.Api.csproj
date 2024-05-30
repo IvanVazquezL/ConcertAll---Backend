@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConcertAll.Dto\ConcertAll.Dto.csproj" />
     <ProjectReference Include="..\ConcertAll.Persistence\ConcertAll.Persistence.csproj" />
     <ProjectReference Include="..\ConcertAll.Repositories\ConcertAll.Repositories.csproj" />
   </ItemGroup>
