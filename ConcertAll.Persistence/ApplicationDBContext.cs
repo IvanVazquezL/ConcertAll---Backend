@@ -1,5 +1,6 @@
 ﻿using ConcertAll.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ConcertAll.Persistence
 {
@@ -14,11 +15,12 @@ namespace ConcertAll.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Genre>().Property(genre => genre.Name).HasMaxLength(50);
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.Entity<Genre>().Property(genre => genre.Name).HasMaxLength(50);
         }
 
         //  Entities to tables
-        public DbSet<Genre> Genres { get; set; }
+        //public DbSet<Genre> Genres { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace ConcertAll.Repositories
 
         public async Task<List<GenreResponseDto>> GetAsync()
         {
-            var items = await context.Genres
+            var items = await context.Set<Genre>()
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -31,8 +31,8 @@ namespace ConcertAll.Repositories
         }
         public async Task<GenreResponseDto?> GetAsync(int id)
         {
-            var item = await context.Genres
-              //.FindAsync(id);
+            var item = await context.Set<Genre>()
+                //.FindAsync(id);
                 .AsNoTracking()
                 .FirstOrDefaultAsync(genre => genre.Id == id);
 
@@ -59,7 +59,7 @@ namespace ConcertAll.Repositories
                 Status = genreRequestDto.Status,
             };
 
-            context.Genres.Add(genre);
+            context.Set<Genre>().Add(genre);
             await context.SaveChangesAsync();
 
             return genre.Id;
@@ -67,7 +67,7 @@ namespace ConcertAll.Repositories
 
         public async Task UpdateAsync(int id, GenreRequestDto genreRequestDto)
         {
-            var item = await context.Genres
+            var item = await context.Set<Genre>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(genre => genre.Id == id);
 
@@ -87,13 +87,13 @@ namespace ConcertAll.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var item = await context.Genres
+            var item = await context.Set<Genre>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(genre => genre.Id == id);
 
             if (item is not null)
             {
-                context.Genres.Remove(item);
+                context.Set<Genre>().Remove(item);
                 await context.SaveChangesAsync();
             }
             else
