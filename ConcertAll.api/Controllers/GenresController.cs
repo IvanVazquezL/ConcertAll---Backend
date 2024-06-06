@@ -1,4 +1,5 @@
-﻿using ConcertAll.Dto.Response;
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Dto.Response;
 using ConcertAll.Entities;
 using ConcertAll.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace ConcertAll.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = new BaseResponseGeneric<ICollection<Genre>>();
+            var response = new BaseResponseGeneric<ICollection<GenreResponseDto>>();
 
             try
             {
@@ -44,7 +45,7 @@ namespace ConcertAll.Api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = new BaseResponseGeneric<Genre>();
+            var response = new BaseResponseGeneric<GenreResponseDto>();
 
             try
             {
@@ -64,16 +65,16 @@ namespace ConcertAll.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Genre genre)
+        public async Task<IActionResult> Post(GenreRequestDto genreRequestDto)
         {
             var response = new BaseResponseGeneric<int>();
 
             try
             {
-                await repository.AddAsync(genre);
-                response.Data = genre.Id;
+                var genreId = await repository.AddAsync(genreRequestDto);
+                response.Data = genreId;
                 response.Success = true;
-                logger.LogInformation($"Posting a genre with id {genre.Id}");
+                logger.LogInformation($"Posting a genre with id {genreId}");
 
                 return StatusCode((int)HttpStatusCode.Created, response);
             }
@@ -87,15 +88,15 @@ namespace ConcertAll.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put(int id, Genre genre)
+        public async Task<IActionResult> Put(int id, GenreRequestDto genreRequestDto)
         {
             var response = new BaseResponse();
 
             try
             {
-                await repository.UpdateAsync(id, genre);
+                await repository.UpdateAsync(id, genreRequestDto);
                 response.Success = true;
-                logger.LogInformation($"Updating a genre with id {genre.Id}");
+                logger.LogInformation($"Updating a genre with id {id}");
 
                 return Ok(response);
             }

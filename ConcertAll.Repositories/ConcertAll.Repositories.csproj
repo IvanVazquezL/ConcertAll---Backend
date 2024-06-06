@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConcertAll.Dto\ConcertAll.Dto.csproj" />
     <ProjectReference Include="..\ConcertAll.Entities\ConcertAll.Entities.csproj" />
     <ProjectReference Include="..\ConcertAll.Persistence\ConcertAll.Persistence.csproj" />
   </ItemGroup>

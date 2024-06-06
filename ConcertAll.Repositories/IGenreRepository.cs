@@ -1,13 +1,15 @@
-﻿using ConcertAll.Entities;
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Dto.Response;
+using ConcertAll.Entities;
 
 namespace ConcertAll.Repositories
 {
     public interface IGenreRepository
     {
-        Task AddAsync(Genre genre);
+        Task<int> AddAsync(GenreRequestDto genre);
         Task DeleteAsync(int id);
-        Task<List<Genre>> GetAsync();
-        Task<Genre?> GetAsync(int id);
-        Task UpdateAsync(int id, Genre genre);
+        Task<List<GenreResponseDto>> GetAsync();
+        Task<GenreResponseDto?> GetAsync(int id);
+        Task UpdateAsync(int id, GenreRequestDto genre);
     }
 }
