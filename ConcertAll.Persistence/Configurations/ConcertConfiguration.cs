@@ -22,6 +22,9 @@ namespace ConcertAll.Persistence.Configurations
             builder.Property(concert => concert.ImageUrl)
                 .HasMaxLength(250)
                 .IsUnicode(false);
+            builder.HasIndex(concert => concert.Title);
+
+            builder.ToTable(nameof(Concert), "Musicals");
         }
     }
 }

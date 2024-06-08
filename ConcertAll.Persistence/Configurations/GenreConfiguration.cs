@@ -14,6 +14,7 @@ namespace ConcertAll.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Genre> builder)
         {
             builder.Property(genre => genre.Name).HasMaxLength(50);
+            builder.ToTable(nameof(Genre), "Musicals");
         }
     }
 }

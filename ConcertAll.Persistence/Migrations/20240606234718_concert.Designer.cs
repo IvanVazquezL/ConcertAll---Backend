@@ -4,6 +4,7 @@ using ConcertAll.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcertAll.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240606234718_concert")]
+    partial class concert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,9 +78,7 @@ namespace ConcertAll.Persistence.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("Title");
-
-                    b.ToTable("Concert", "Musicals");
+                    b.ToTable("Concert");
                 });
 
             modelBuilder.Entity("ConcertAll.Entities.Genre", b =>
@@ -98,7 +99,7 @@ namespace ConcertAll.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genre", "Musicals");
+                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("ConcertAll.Entities.Concert", b =>

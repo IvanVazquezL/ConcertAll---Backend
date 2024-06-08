@@ -27,7 +27,17 @@ namespace ConcertAll.Api.Controllers
 
             try
             {
-                response.Data = await repository.GetAsync();
+                var genresDb = await repository.GetAsync();
+
+                //  Mapping
+                var genres = genresDb.Select(genre => new GenreResponseDto
+                {
+                    Id = genre.Id,
+                    Name = genre.Name,
+                    Status = genre.Status
+                }).ToList();
+
+                response.Data = genres;
                 response.Success = true;
                 logger.LogInformation("Retrieving all genres");
 
@@ -46,14 +56,29 @@ namespace ConcertAll.Api.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var response = new BaseResponseGeneric<GenreResponseDto>();
+            var genreDb = await repository.GetAsync(id);
 
             try
             {
-                response.Data = await repository.GetAsync(id);
+                if (genreDb is null)
+                {
+                    logger.LogWarning($"Genre with id {id} wat not found");
+                    return NotFound(response);
+                }
+                
+                //  Mapping
+                var genre = new GenreResponseDto
+                {
+                    Id = genreDb.Id,
+                    Name = genreDb.Name,
+                    Status = genreDb.Status
+                };
+
+                response.Data = genre;
                 response.Success = true;
                 logger.LogInformation($"Retrieving a genre with id {id}");
-
-                return response.Data is not null ? Ok(response) : NotFound(response);
+                
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -71,7 +96,14 @@ namespace ConcertAll.Api.Controllers
 
             try
             {
-                var genreId = await repository.AddAsync(genreRequestDto);
+                //  Mapping
+                var genreDb = new Genre()
+                {
+                    Name = genreRequestDto.Name,
+                    Status = genreRequestDto.Status
+                };
+
+                var genreId = await repository.AddAsync(genreDb);
                 response.Data = genreId;
                 response.Success = true;
                 logger.LogInformation($"Posting a genre with id {genreId}");
@@ -94,7 +126,18 @@ namespace ConcertAll.Api.Controllers
 
             try
             {
-                await repository.UpdateAsync(id, genreRequestDto);
+                var genreDb = await repository.GetAsync(id);
+
+                if (genreDb is null)
+                {
+                    response.ErrorMessage = "Record not found";
+                    return NotFound(response);
+                }
+
+                genreDb.Name = genreRequestDto.Name;
+                genreDb.Status = genreRequestDto.Status;
+
+                await repository.UpdateAsync();
                 response.Success = true;
                 logger.LogInformation($"Updating a genre with id {id}");
 
@@ -116,6 +159,14 @@ namespace ConcertAll.Api.Controllers
 
             try
             {
+                var genreDb = await repository.GetAsync(id);
+                
+                if (genreDb is null)
+                {
+                    response.ErrorMessage = "Record not found";
+                    return NotFound(response);
+                }
+
                 await repository.DeleteAsync(id);
                 response.Success = true;
                 logger.LogInformation($"Deleting a genre with id {id}");
