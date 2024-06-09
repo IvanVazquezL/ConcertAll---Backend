@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace ConcertAll.Repositories
 {
-    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
+    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
     {
-        private readonly DbContext context;
+        protected readonly DbContext context;
 
         public RepositoryBase(DbContext context)
         {
             this.context = context;
         }
 
-        public async Task<ICollection<TEntity>> GetAsync()
+        public virtual async Task<ICollection<TEntity>> GetAsync()
         {
             return await context.Set<TEntity>()
                 .AsNoTracking()

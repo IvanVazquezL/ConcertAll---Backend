@@ -9,11 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Register or configure my context
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"), builder =>
+    {
+        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+    });
 });
 
 // Registering my services
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
+builder.Services.AddTransient<IConcertRepository,ConcertRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

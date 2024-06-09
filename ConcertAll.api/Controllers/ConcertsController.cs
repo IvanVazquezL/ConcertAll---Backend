@@ -24,8 +24,9 @@ namespace ConcertAll.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = new BaseResponseGeneric<ICollection<ConcertResponseDto>>();
             var concertsDb = await repository.GetAsync();
+            /*
+            var response = new BaseResponseGeneric<ICollection<ConcertResponseDto>>();
 
             //  Mapping
             var concerts = concertsDb.Select(concert => new ConcertResponseDto
@@ -45,15 +46,20 @@ namespace ConcertAll.Api.Controllers
             response.Success = true;
 
             return Ok(response);
+            */
+            return Ok(concertsDb);
         }
 
         [HttpGet("title")]
         public async Task<IActionResult> Get(string? title)
         {
+            /*
             var concerts = await repository.GetAsync(
                 concert => concert.Title.Contains(title ?? string.Empty),
                 concert => concert.DateEvent
             );
+            */
+            var concerts = await repository.GetAsync(title);
             return Ok(concerts);
         }
 
