@@ -28,9 +28,33 @@ namespace ConcertAll.Repositories
 
         public async Task<ICollection<ConcertInfo>> GetAsync(string? title)
         {
-            //  optimized eager loading 
+            /*
+            //optimized eager loading 
             return await context.Set<Concert>()
                 .Include(concert => concert.Genre)
+                .Where(concert => concert.Title.Contains(title ?? string.Empty))
+                .AsNoTracking()
+                .Select(concert => new ConcertInfo
+                {
+                    Id = concert.Id,
+                    Title = concert.Title,
+                    Description = concert.Description,
+                    Place = concert.Place,
+                    UnitPrice = concert.UnitPrice,
+                    Genre = concert.Genre.Name,
+                    GenreId = concert.GenreId,
+                    DateEvent = concert.DateEvent.ToShortDateString(),
+                    TimeEvent = concert.DateEvent.ToShortTimeString(),
+                    ImageUrl = concert.ImageUrl,
+                    TicketsQuantity = concert.TicketsQuantity,
+                    Finalized = concert.Finalized,
+                    Status = concert.Finalized ? "Active" : "Inactive"
+                })
+                .ToListAsync();
+            */
+
+            //  lazy loading
+            return await context.Set<Concert>()
                 .Where(concert => concert.Title.Contains(title ?? string.Empty))
                 .AsNoTracking()
                 .Select(concert => new ConcertInfo
