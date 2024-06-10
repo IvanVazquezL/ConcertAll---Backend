@@ -53,6 +53,7 @@ namespace ConcertAll.Repositories
                 .ToListAsync();
             */
 
+            /*
             //  lazy loading
             return await context.Set<Concert>()
                 .Where(concert => concert.Title.Contains(title ?? string.Empty))
@@ -74,6 +75,12 @@ namespace ConcertAll.Repositories
                     Status = concert.Finalized ? "Active" : "Inactive"
                 })
                 .ToListAsync();
+            */
+
+            //  raw queries
+            var query = context.Set<ConcertInfo>().
+                FromSqlRaw("usp_ListConcerts {0}", title ?? string.Empty);
+            return await query.ToListAsync();
         }
     }
 }

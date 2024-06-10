@@ -1,4 +1,5 @@
 ﻿using ConcertAll.Entities;
+using ConcertAll.Entities.Info;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -17,6 +18,8 @@ namespace ConcertAll.Persistence
             base.OnModelCreating(modelBuilder);
             
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.Entity<ConcertInfo>().HasNoKey();
             //modelBuilder.Entity<Genre>().Property(genre => genre.Name).HasMaxLength(50);
         }
 
