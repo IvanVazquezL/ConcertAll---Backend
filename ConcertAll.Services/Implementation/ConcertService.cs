@@ -53,7 +53,7 @@ namespace ConcertAll.Services.Implementation
                 var data = await repository.GetAsync(id);
 
                 response.Data = mapper.Map<ConcertResponseDto>(data);
-                response.Success = true;
+                response.Success = data != null;
             }
             catch (Exception ex)
             {

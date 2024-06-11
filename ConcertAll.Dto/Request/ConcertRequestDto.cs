@@ -12,7 +12,8 @@ namespace ConcertAll.Dto.Request
         public string Description { get; set; } = default!;
         public string Place { get; set; } = default!;
         public double UnitPrice { get; set; }
-        public DateTime DateEvent { get; set; }
+        public string DateEvent { get; set; } = default!;
+        public string TimeEvent { get; set; } = default!;
         public string ImageUrl { get; set; } = default!;
         public int TicketsQuantity { get; set; }
         public int GenreId { get; set; }

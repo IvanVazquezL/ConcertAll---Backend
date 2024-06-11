@@ -2,6 +2,7 @@ using ConcertAll.Persistence;
 using ConcertAll.Repositories;
 using ConcertAll.Services.Implementation;
 using ConcertAll.Services.Interface;
+using ConcertAll.Services.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,7 @@ builder.Services.AddTransient<IConcertService, ConcertService>();
 builder.Services.AddAutoMapper(config =>
 {
     //  Configuring the mapping profiles
-
+    config.AddProfile<ConcertProfile>();
 });
 
 builder.Services.AddControllers();
