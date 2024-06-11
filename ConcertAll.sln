@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcertAll.Repositories", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcertAll.Persistence", "ConcertAll.Persistence\ConcertAll.Persistence.csproj", "{F8CFCCA2-5C2A-421A-9172-51A20F33236C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcertAll.Dto", "ConcertAll.Dto\ConcertAll.Dto.csproj", "{795E41DD-667E-4148-B7B7-7A4176BA9FAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcertAll.Dto", "ConcertAll.Dto\ConcertAll.Dto.csproj", "{795E41DD-667E-4148-B7B7-7A4176BA9FAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcertAll.Services", "ConcertAll.Services\ConcertAll.Services.csproj", "{FCA21581-1334-43D7-A0CC-E0AD58F8501B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{795E41DD-667E-4148-B7B7-7A4176BA9FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795E41DD-667E-4148-B7B7-7A4176BA9FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795E41DD-667E-4148-B7B7-7A4176BA9FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCA21581-1334-43D7-A0CC-E0AD58F8501B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA21581-1334-43D7-A0CC-E0AD58F8501B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA21581-1334-43D7-A0CC-E0AD58F8501B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA21581-1334-43D7-A0CC-E0AD58F8501B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
