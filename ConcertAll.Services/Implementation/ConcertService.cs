@@ -1,7 +1,9 @@
 ﻿
 using AutoMapper;
+using Azure.Core;
 using ConcertAll.Dto.Request;
 using ConcertAll.Dto.Response;
+using ConcertAll.Entities;
 using ConcertAll.Repositories;
 using ConcertAll.Services.Interface;
 using Microsoft.Extensions.Logging;
@@ -42,33 +44,106 @@ namespace ConcertAll.Services.Implementation
             return response;
         }
 
-        public Task<BaseResponseGeneric<ConcertResponseDto>> GetAsync(int id)
+        public async Task<BaseResponseGeneric<ConcertResponseDto>> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponseGeneric<ConcertResponseDto>();
+
+            try
+            {
+                var data = await repository.GetAsync(id);
+
+                response.Data = mapper.Map<ConcertResponseDto>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error while retrieving data";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
 
-        public Task<BaseResponseGeneric<int>> AddAsync(ConcertRequestDto request)
+        public async Task<BaseResponseGeneric<int>> AddAsync(ConcertRequestDto request)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponseGeneric<int>();
+
+            try
+            {
+                response.Data = await repository.AddAsync(mapper.Map<Concert>(request));
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error while saving data";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
 
-        public Task<BaseResponse> DeleteAsync(int id)
+        public async Task<BaseResponse> UpdateAsync(int id, ConcertRequestDto request)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse();
+
+            try
+            {
+                var data = await repository.GetAsync(id);
+
+                if (data is null)
+                {
+                    response.ErrorMessage = $"Record with {id} was not found";
+                    return response;
+                }
+
+                mapper.Map(request, data);
+                await repository.UpdateAsync();
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error while updating data";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
 
-        public Task<BaseResponse> FinalizeAsync(int id)
+        public async Task<BaseResponse> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse();
+
+            try
+            {
+                await repository.DeleteAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error while deleting data";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
 
-
-
-
-
-        public Task<BaseResponse> UpdateAsync(int id, ConcertRequestDto request)
+        public async Task<BaseResponse> FinalizeAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse();
+
+            try
+            {
+                await repository.FinalizeAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error while finalizing concert";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
     }
 }

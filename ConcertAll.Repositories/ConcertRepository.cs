@@ -82,5 +82,16 @@ namespace ConcertAll.Repositories
                 FromSqlRaw("usp_ListConcerts {0}", title ?? string.Empty);
             return await query.ToListAsync();
         }
+
+        public async Task FinalizeAsync(int id)
+        {
+            var concert = await GetAsync(id);
+
+            if (concert is not null)
+            {
+                concert.Finalized = true;
+                await UpdateAsync();
+            }
+        }
     }
 }

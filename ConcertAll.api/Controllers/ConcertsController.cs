@@ -2,6 +2,7 @@
 using ConcertAll.Dto.Response;
 using ConcertAll.Entities;
 using ConcertAll.Repositories;
+using ConcertAll.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcertAll.Api.Controllers
@@ -10,57 +11,18 @@ namespace ConcertAll.Api.Controllers
     [Route("api/concerts")]
     public class ConcertsController : ControllerBase
     {
-        private readonly IConcertRepository repository;
-        private readonly IGenreRepository genreRepository;
-        private readonly ILogger<ConcertsController> logger;
+        private readonly IConcertService service;
 
-        public ConcertsController(IConcertRepository repository, IGenreRepository genreRepository, ILogger<ConcertsController> logger)
+        public ConcertsController(IConcertService service)
         {
-            this.repository = repository;
-            this.genreRepository = genreRepository;
-            this.logger = logger;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var concertsDb = await repository.GetAsync();
-            /*
-            var response = new BaseResponseGeneric<ICollection<ConcertResponseDto>>();
-
-            //  Mapping
-            var concerts = concertsDb.Select(concert => new ConcertResponseDto
-            {
-                Title = concert.Title,
-                Description = concert.Description,
-                Place = concert.Place,
-                UnitPrice = concert.UnitPrice,
-                GenreId = concert.GenreId,
-                DateEvent = concert.DateEvent,
-                ImageUrl = concert.ImageUrl,
-                TicketsQuantity = concert.TicketsQuantity,
-                Finalized = concert.Finalized
-            }).ToList();
-
-            response.Data = concerts;
-            response.Success = true;
-
-            return Ok(response);
-            */
-            return Ok(concertsDb);
+            this.service = service;
         }
 
         [HttpGet("title")]
         public async Task<IActionResult> Get(string? title)
         {
-            /*
-            var concerts = await repository.GetAsync(
-                concert => concert.Title.Contains(title ?? string.Empty),
-                concert => concert.DateEvent
-            );
-            */
-            var concerts = await repository.GetAsync(title);
-            return Ok(concerts);
+            var response = await service.GetAsync(title);
+            return response.Success ? Ok(response): BadRequest(response);
         }
 
         [HttpPost]

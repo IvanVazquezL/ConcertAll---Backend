@@ -1,5 +1,7 @@
 using ConcertAll.Persistence;
 using ConcertAll.Repositories;
+using ConcertAll.Services.Implementation;
+using ConcertAll.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,13 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 // Registering my services
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
 builder.Services.AddTransient<IConcertRepository,ConcertRepository>();
+builder.Services.AddTransient<IConcertService, ConcertService>();
+
+builder.Services.AddAutoMapper(config =>
+{
+    //  Configuring the mapping profiles
+
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
