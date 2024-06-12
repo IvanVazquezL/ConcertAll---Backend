@@ -15,6 +15,8 @@ namespace ConcertAll.Persistence.Configurations
         {
             builder.Property(genre => genre.Name).HasMaxLength(50);
             builder.ToTable(nameof(Genre), "Musicals");
+            //  Will retrive the genre only when Status is true
+            builder.HasQueryFilter(genre => genre.Status);
         }
     }
 }

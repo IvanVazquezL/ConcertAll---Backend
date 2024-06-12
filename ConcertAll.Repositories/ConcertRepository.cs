@@ -28,11 +28,11 @@ namespace ConcertAll.Repositories
 
         public async Task<ICollection<ConcertInfo>> GetAsync(string? title)
         {
-            /*
             //optimized eager loading 
             return await context.Set<Concert>()
                 .Include(concert => concert.Genre)
                 .Where(concert => concert.Title.Contains(title ?? string.Empty))
+                .IgnoreQueryFilters()
                 .AsNoTracking()
                 .Select(concert => new ConcertInfo
                 {
@@ -51,7 +51,6 @@ namespace ConcertAll.Repositories
                     Status = concert.Finalized ? "Active" : "Inactive"
                 })
                 .ToListAsync();
-            */
 
             /*
             //  lazy loading
@@ -77,10 +76,12 @@ namespace ConcertAll.Repositories
                 .ToListAsync();
             */
 
+            /*
             //  raw queries
             var query = context.Set<ConcertInfo>().
                 FromSqlRaw("usp_ListConcerts {0}", title ?? string.Empty);
             return await query.ToListAsync();
+            */
         }
 
         public async Task FinalizeAsync(int id)
