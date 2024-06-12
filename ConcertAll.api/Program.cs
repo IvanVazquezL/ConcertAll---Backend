@@ -4,6 +4,7 @@ using ConcertAll.Services.Implementation;
 using ConcertAll.Services.Interface;
 using ConcertAll.Services.Profiles;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,19 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+//  Swagger configuration
+var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+builder.Services.AddSwaggerGen(config =>
+{
+    config.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+    {
+        Title = "ConcertAll API",
+        Description = "This is the documentation for the ConcertAll API"
+    });
+    config.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
@@ -40,7 +53,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger(); 
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(config =>
+    {
+        config.SwaggerEndpoint("/swagger/v1/swagger.json","ConcertAll API Swagger");
+        config.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();

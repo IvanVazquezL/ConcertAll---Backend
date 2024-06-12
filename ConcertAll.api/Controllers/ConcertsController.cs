@@ -18,6 +18,14 @@ namespace ConcertAll.Api.Controllers
             this.service = service;
         }
 
+        /// <summary>
+        /// This endpoint is used to retrieve a specific set of concerts according to its title
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        /// <remarks>Detailed info</remarks>
+        /// <response code = "200">Good response</response>
+        /// <response code = "400">Bad Request</response>
         [HttpGet("title")]
         public async Task<IActionResult> Get(string? title)
         {
