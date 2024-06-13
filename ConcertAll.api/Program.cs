@@ -23,11 +23,13 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
 builder.Services.AddTransient<IConcertRepository,ConcertRepository>();
 builder.Services.AddTransient<IConcertService, ConcertService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
 
 builder.Services.AddAutoMapper(config =>
 {
     //  Configuring the mapping profiles
     config.AddProfile<ConcertProfile>();
+    config.AddProfile<GenreProfile>();
 });
 
 builder.Services.AddControllers();
