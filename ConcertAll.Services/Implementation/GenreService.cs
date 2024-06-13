@@ -56,7 +56,6 @@ namespace ConcertAll.Services.Implementation
 
                 response.Data = mapper.Map<GenreResponseDto>(data);
                 response.Success = data != null;
-                //  28:12
             }
             catch (Exception ex)
             {
