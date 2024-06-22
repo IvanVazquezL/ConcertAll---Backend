@@ -1,0 +1,33 @@
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Services.Interface;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ConcertAll.Api.Controllers
+{
+    [ApiController]
+    [Route("api/sales")]
+    public class SalesController : ControllerBase
+    {
+
+        private readonly ISaleService service;
+
+        public SalesController(ISaleService service) {
+            this.service = service;
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult>Get(int id)
+        {
+            var response = await service.GetAsync(id);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(SaleRequestDto request)
+        {
+            var response = await service.AddAsync(request.Email, request);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+    }
+}

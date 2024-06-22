@@ -13,23 +13,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Register or configure my context
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"), builder =>
-    {
-        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-    });
+    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
 });
 
 // Registering my services
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
 builder.Services.AddTransient<IConcertRepository,ConcertRepository>();
+
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.AddTransient<ISaleRepository, SaleRepository>();
+
 builder.Services.AddTransient<IConcertService, ConcertService>();
 builder.Services.AddTransient<IGenreService, GenreService>();
+builder.Services.AddTransient<ISaleService, SaleService>();
 
 builder.Services.AddAutoMapper(config =>
 {
     //  Configuring the mapping profiles
     config.AddProfile<ConcertProfile>();
     config.AddProfile<GenreProfile>();
+    config.AddProfile<SaleProfile>();
 });
 
 builder.Services.AddControllers();

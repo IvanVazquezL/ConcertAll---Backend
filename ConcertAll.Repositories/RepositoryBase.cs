@@ -25,7 +25,7 @@ namespace ConcertAll.Repositories
                 .ToListAsync();
         }
 
-        public async Task<TEntity?> GetAsync(int id)
+        public virtual async Task<TEntity?> GetAsync(int id)
         {
             return await context.Set<TEntity>()
                 .FindAsync(id);
@@ -48,7 +48,7 @@ namespace ConcertAll.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> AddAsync(TEntity entity)
+        public virtual async Task<int> AddAsync(TEntity entity)
         {
             await context.Set<TEntity>().AddAsync(entity);
             await context.SaveChangesAsync();
@@ -56,7 +56,7 @@ namespace ConcertAll.Repositories
             return entity.Id;
         }
 
-        public async Task UpdateAsync()
+        public virtual async Task UpdateAsync()
         {
             await context.SaveChangesAsync();
         }
