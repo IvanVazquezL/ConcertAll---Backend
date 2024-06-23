@@ -27,9 +27,9 @@ namespace ConcertAll.Api.Controllers
         /// <response code = "200">Good response</response>
         /// <response code = "400">Bad Request</response>
         [HttpGet("title")]
-        public async Task<IActionResult> Get(string? title)
+        public async Task<IActionResult> Get(string? title, [FromQuery]PaginationDto pagination)
         {
-            var response = await service.GetAsync(title);
+            var response = await service.GetAsync(title, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 

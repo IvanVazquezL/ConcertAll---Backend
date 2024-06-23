@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
 });
 
+//  Setting context
+builder.Services.AddHttpContextAccessor();
+
 // Registering my services
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
 builder.Services.AddTransient<IConcertRepository,ConcertRepository>();
@@ -33,6 +36,19 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ConcertProfile>();
     config.AddProfile<GenreProfile>();
     config.AddProfile<SaleProfile>();
+});
+
+// CORS
+var corsConfiguration = "ConcertAllCors";
+builder.Services.AddCors(setup =>
+{
+    setup.AddPolicy(corsConfiguration, policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader().WithExposedHeaders(new string[] { "TotalRecordsQuantity" });
+        policy.AllowAnyMethod();
+
+    });
 });
 
 builder.Services.AddControllers();

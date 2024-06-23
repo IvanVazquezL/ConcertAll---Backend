@@ -25,6 +25,7 @@ namespace ConcertAll.Persistence.Configurations
             builder.HasIndex(concert => concert.Title);
 
             builder.ToTable(nameof(Concert), "Musicals");
+            builder.HasQueryFilter(concert => concert.Status);
         }
     }
 }

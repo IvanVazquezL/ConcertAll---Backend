@@ -24,13 +24,13 @@ namespace ConcertAll.Services.Implementation
             this.mapper = mapper;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<ConcertResponseDto>>> GetAsync(string? title)
+        public async Task<BaseResponseGeneric<ICollection<ConcertResponseDto>>> GetAsync(string? title, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<ConcertResponseDto>>();
 
             try
             {
-                var data = await repository.GetAsync(title);
+                var data = await repository.GetAsync(title, pagination);
 
                 response.Data = mapper.Map<ICollection<ConcertResponseDto>>(data);
                 response.Success = true;

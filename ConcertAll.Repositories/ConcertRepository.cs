@@ -1,6 +1,9 @@
-﻿using ConcertAll.Entities;
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Entities;
 using ConcertAll.Entities.Info;
 using ConcertAll.Persistence;
+using ConcertAll.Repositories.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +15,11 @@ namespace ConcertAll.Repositories
 {
     public class ConcertRepository : RepositoryBase<Concert>, IConcertRepository
     {
-        public ConcertRepository(ApplicationDBContext context) : base(context) 
+        private readonly IHttpContextAccessor httpContext;
+
+        public ConcertRepository(ApplicationDBContext context, IHttpContextAccessor httpContext) : base(context) 
         {
-            
+            this.httpContext = httpContext;
         }
 
         public override async Task<ICollection<Concert>> GetAsync()
@@ -26,10 +31,10 @@ namespace ConcertAll.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<ConcertInfo>> GetAsync(string? title)
+        public async Task<ICollection<ConcertInfo>> GetAsync(string? title, PaginationDto pagination)
         {
             //optimized eager loading 
-            return await context.Set<Concert>()
+            var queryable = context.Set<Concert>()
                 .Include(concert => concert.Genre)
                 .Where(concert => concert.Title.Contains(title ?? string.Empty))
                 .IgnoreQueryFilters()
@@ -50,38 +55,10 @@ namespace ConcertAll.Repositories
                     Finalized = concert.Finalized,
                     Status = concert.Finalized ? "Active" : "Inactive"
                 })
-                .ToListAsync();
+                .AsQueryable();
 
-            /*
-            //  lazy loading
-            return await context.Set<Concert>()
-                .Where(concert => concert.Title.Contains(title ?? string.Empty))
-                .AsNoTracking()
-                .Select(concert => new ConcertInfo
-                {
-                    Id = concert.Id,
-                    Title = concert.Title,
-                    Description = concert.Description,
-                    Place = concert.Place,
-                    UnitPrice = concert.UnitPrice,
-                    Genre = concert.Genre.Name,
-                    GenreId = concert.GenreId,
-                    DateEvent = concert.DateEvent.ToShortDateString(),
-                    TimeEvent = concert.DateEvent.ToShortTimeString(),
-                    ImageUrl = concert.ImageUrl,
-                    TicketsQuantity = concert.TicketsQuantity,
-                    Finalized = concert.Finalized,
-                    Status = concert.Finalized ? "Active" : "Inactive"
-                })
-                .ToListAsync();
-            */
-
-            /*
-            //  raw queries
-            var query = context.Set<ConcertInfo>().
-                FromSqlRaw("usp_ListConcerts {0}", title ?? string.Empty);
-            return await query.ToListAsync();
-            */
+            await httpContext.HttpContext.InsertPaginationHeader(queryable);
+            return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
         }
 
         public async Task FinalizeAsync(int id)
