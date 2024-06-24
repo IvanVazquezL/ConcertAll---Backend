@@ -1,15 +1,21 @@
-﻿using ConcertAll.Entities;
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Entities;
 using ConcertAll.Persistence;
+using ConcertAll.Repositories.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace ConcertAll.Repositories
 {
     public class SaleRepository : RepositoryBase<Sale>, ISaleRepository
     {
-        public SaleRepository(ApplicationDBContext context) : base(context)
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public SaleRepository(ApplicationDBContext context, IHttpContextAccessor httpContextAccessor) : base(context)
         {
-                
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task CreateTransactionAsync()
         {
@@ -47,6 +53,22 @@ namespace ConcertAll.Repositories
                 .AsNoTracking()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<Sale>> GetAsync<TKey>(Expression<Func<Sale, bool>> predicate, Expression<Func<Sale, TKey>> orderBy, PaginationDto pagination)
+        {
+            var queryable = context.Set<Sale>()
+                .Include(x => x.Customer)
+                .Include(x => x.Concert)
+                .ThenInclude(x => x.Genre)
+                .Where(predicate)
+                .OrderBy(orderBy)
+                .AsNoTracking()
+                .AsQueryable();
+
+            await httpContextAccessor.HttpContext.InsertPaginationHeader(queryable);
+            var response = await queryable.Paginate(pagination).ToListAsync();
+            return response;
         }
     }
 }

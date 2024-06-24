@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConcertAll.Repositories.Utils
 {
@@ -11,7 +10,7 @@ namespace ConcertAll.Repositories.Utils
             if (httpContext is null)
                 throw new ArgumentNullException(nameof(httpContext));
 
-            double totalRecords = await queryable.CountAsync();
+            double totalRecords = queryable.ToList().Count;
             httpContext.Response.Headers.Add("TotalRecordsQuantity", totalRecords.ToString());
 
         }

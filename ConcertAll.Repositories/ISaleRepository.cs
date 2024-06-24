@@ -1,4 +1,6 @@
-﻿using ConcertAll.Entities;
+﻿using ConcertAll.Dto.Request;
+using ConcertAll.Entities;
+using System.Linq.Expressions;
 
 namespace ConcertAll.Repositories
 {
@@ -6,5 +8,7 @@ namespace ConcertAll.Repositories
     {
         Task CreateTransactionAsync();
         Task RollbackAsync();
+        Task<ICollection<Sale>> GetAsync<TKey>(Expression<Func<Sale, bool>> predicate, Expression<Func<Sale, TKey>> orderBy, PaginationDto pagination);
+
     }
 }
