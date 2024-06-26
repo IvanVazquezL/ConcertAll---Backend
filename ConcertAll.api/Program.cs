@@ -127,4 +127,13 @@ app.UseCors(corsConfiguration);
 
 app.MapControllers();
 
+//  Auto-migrations
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+    await db.Database.MigrateAsync();
+
+    await UserDataSeeder.Seed(scope.ServiceProvider);
+}
+
 app.Run();
