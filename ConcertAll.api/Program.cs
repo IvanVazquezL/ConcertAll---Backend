@@ -3,8 +3,13 @@ using ConcertAll.Repositories;
 using ConcertAll.Services.Implementation;
 using ConcertAll.Services.Interface;
 using ConcertAll.Services.Profiles;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +23,37 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 //  Setting context
 builder.Services.AddHttpContextAccessor();
+
+//  Identity
+//  builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddIdentity<ConcertAllUserIdentity, IdentityRole>(policies =>
+{
+    policies.Password.RequireDigit = true;
+    policies.Password.RequiredLength = 6;
+    policies.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(x =>
+    {
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] ??
+        throw new InvalidOperationException("JWT key not configured"));
+        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters{
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // Registering my services
 builder.Services.AddTransient<IGenreRepository,GenreRepository>();
@@ -83,7 +119,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseCors(corsConfiguration);
 
 app.MapControllers();
 

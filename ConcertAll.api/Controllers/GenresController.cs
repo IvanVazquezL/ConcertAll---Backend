@@ -1,5 +1,7 @@
 ﻿using ConcertAll.Dto.Request;
 using ConcertAll.Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcertAll.Api.Controllers
@@ -16,6 +18,7 @@ namespace ConcertAll.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get()
         {
             var response = await service.GetAsync();

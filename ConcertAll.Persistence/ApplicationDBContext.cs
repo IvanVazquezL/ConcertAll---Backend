@@ -1,11 +1,13 @@
 ﻿using ConcertAll.Entities;
 using ConcertAll.Entities.Info;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace ConcertAll.Persistence
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<ConcertAllUserIdentity>
     {
         public ApplicationDBContext(DbContextOptions options) : base(options)
         {
@@ -21,6 +23,10 @@ namespace ConcertAll.Persistence
 
             modelBuilder.Entity<ConcertInfo>().HasNoKey();
             //modelBuilder.Entity<Genre>().Property(genre => genre.Name).HasMaxLength(50);
+
+            modelBuilder.Entity<ConcertAllUserIdentity>(x => x.ToTable("User"));
+            modelBuilder.Entity<IdentityRole>(x => x.ToTable("Role"));
+            modelBuilder.Entity<IdentityUserRole<string>>(x => x.ToTable("UserRole"));
         }
 
         //  Entities to tables
